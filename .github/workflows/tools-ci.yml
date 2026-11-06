@@ -1,0 +1,38 @@
+name: tools CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: byte-compile
+        run: python -m py_compile tools/port_a55.py tools/test_port.py
+
+      - name: cli surface
+        run: python tools/port_a55.py --help
+
+      - name: derivation self-test
+        working-directory: tools
+        run: python test_port.py
+
+      - name: shell syntax
+        run: bash -n tools/preflight.sh
+
+      - name: no firmware committed
+        run: |
+          if git ls-files | grep -Ei '\.(img|tar\.md5|lz4|ko|elf)$'; then
+            echo "::error::firmware or binary artefacts are tracked"
+            exit 1
+          fi

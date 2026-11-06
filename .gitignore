@@ -1,0 +1,26 @@
+# generated outputs
+out-*/
+T_out/
+T_selftest/
+T_boot.img
+
+# firmware, never committed
+*.tar.md5
+*.zip
+*.img
+*.img.lz4
+boot.img
+vendor_boot.img
+kernel
+
+# recovered artefacts
+vmlinux.elf
+vmlinux.btf
+vmlinux-btf.raw
+vmlinux.nm
+*.ko
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
